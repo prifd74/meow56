@@ -14,12 +14,17 @@ app.get('/', (_, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// API route for uptime + member count
+// API route for uptime + member count + guild count
 app.get('/api/status', (req, res) => {
-  const totalMembers = client.guilds.cache.reduce((acc, g) => acc + (g.memberCount || 0), 0);
+  const guildCount = client.guilds.cache.size;
+  const memberCount = client.guilds.cache.reduce((acc, g) => acc + (g.memberCount || 0), 0);
   const uptime = Date.now() - launchTime;
 
-  res.json({ memberCount: totalMembers, uptime });
+  res.json({
+    guildCount,
+    memberCount,
+    uptime
+  });
 });
 
 app.listen(PORT, () => {
